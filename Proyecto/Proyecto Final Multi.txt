@@ -1,0 +1,54 @@
+# Dendrograma
+
+# Cargamos librerias
+install.packages("cluster.datasets")
+library("cluster.datasets")
+
+# Bajamos la matriz de datos
+series <- read_excel("series.xlsx")
+
+# Cambiamos el nombre de la matriz
+SET=series
+
+#Exploración de la matríz
+
+#Dimensión
+dim(SET)
+
+# Nombre de las variables
+names(SET)
+
+#Tipo de las variables
+str(SET)
+
+#Datos perdidos
+
+anyNA(SET)
+
+# Calculo de la matriz de distancia de Mahalonobis
+dist.SET<-dist(SET[,2:5])
+
+# Convertir los resultados del Calculo de la distancia a una matriz de datos y me indique 3 digitos.
+round(as.matrix(dist.SET)[1:6, 1:6],3)
+
+# Calculo del dendrograma
+dend.SET<-as.dendrogram(hclust(dist.SET))
+
+#Se Instala y Carga la Paqueteria para el Dendrograma
+install.packages("dendextend")
+library(dendextend)
+
+# Guardar las etiquetas en un objeto "L"
+L=labels(dend.SET)
+labels(dend.SET)=SET$name
+
+
+# Creación del Dendrograma
+
+install.packages("factoextra")
+install.packages("ggplot2")
+library(factoextra)
+library(ggplot2)
+fviz_dend(dend.SET,
+          k = 2,cex=0.55,border=2:10,k_colors = c("brown1","hotpink4")) +
+  labs(title = "Dendrograma de Series")
